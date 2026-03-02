@@ -63,7 +63,7 @@ int main() {
         << std::setw(10) << "DIM"
         << std::setw(10) << "CPU, ms"
         << std::setw(10) << "GPU, ms"
-        << std::setw(9) << "S"
+        << std::setw(10) << "S"
         << "Is correct" << std::endl;
 
     for (int dim : DIMS) {
@@ -145,8 +145,8 @@ int main() {
             << std::setw(10) << (std::to_string(dim) + "x" + std::to_string(dim))
             << std::setw(10) << cpu_avg_time
             << std::setw(10) << gpu_avg_time
-            << std::setw(9) << S
-            << "  " << (isCorrect ? "YES" : "NO") << std::endl;
+            << std::setw(10) << S
+            << (isCorrect ? "YES" : "NO") << std::endl;
     }
 
     cudaEventDestroy(gpu_time_start);
