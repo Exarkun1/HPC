@@ -2,7 +2,6 @@
 #include <cuda_runtime.h>
 #include <chrono>
 #include <iomanip>
-#include <string>
 
 const size_t BLOCK_SIZE = 512;
 const size_t REPETITIONS = 10;
@@ -122,7 +121,7 @@ int main() {
         double Sk = cpu_avg_time / gpu_kernel_avg_time;
 
         std::cout << std::fixed << std::setprecision(2) << std::left 
-            << std::setw(10) << std::to_string(size)
+            << std::setw(10) << size
             << std::setw(10) << cpu_avg_time
             << std::setw(10) << gpu_avg_time
             << std::setw(15) << gpu_kernel_avg_time
