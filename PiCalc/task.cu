@@ -7,7 +7,7 @@
 const size_t BLOCK_SIZE = 512;
 const size_t GRID_SIZE = 1024;
 const size_t REPETITIONS = 10;
-const unsigned long long N_POINTS[] = { 1024, 8192, 65536, 524288, 4194304, 33554432, 268435456 };
+const unsigned long long N_POINTS[] = { 524288, 2097152, 8388608, 33554432, 134217728, 536870912 };
 
 // Вычисление числа pi методом Монте-Карло на хосте
 double pi_calc_cpu(unsigned long long N) {
