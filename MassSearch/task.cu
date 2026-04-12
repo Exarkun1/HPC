@@ -9,6 +9,7 @@
 const unsigned int ALPHABET_SIZE = 256;
 const unsigned int BLOCK_SIZE = 256;
 
+// Структура хранения номера подстроки и индекса символа в ней
 struct Pair {
     unsigned int n;
     unsigned int k;
@@ -23,6 +24,7 @@ unsigned int* build_Hs(unsigned int start, unsigned int end, unsigned int num) {
     return Hs;
 }
 
+// Инициализация случайного текста
 void init_random_text(std::string& text, unsigned int H) {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -33,6 +35,7 @@ void init_random_text(std::string& text, unsigned int H) {
     }
 }
 
+// Инициализация случайных подстрок со случайными размерами
 void init_random_patterns(std::vector<std::string>& patterns, unsigned int N, unsigned int min_len, unsigned int max_len) {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -54,6 +57,7 @@ unsigned int* build_lens(const std::vector<std::string>& patterns) {
     return lens;
 }
 
+// Инициализация пар (n,k) для каждого символа алфавита
 void init_table(std::vector<Pair>* table, const std::vector<std::string>& patterns) {
     for (unsigned int i = 0; i < patterns.size(); i++) {
         for (unsigned int k = 0; k < patterns[i].size(); k++) {
@@ -63,6 +67,7 @@ void init_table(std::vector<Pair>* table, const std::vector<std::string>& patter
     }
 }
 
+// Инициализация матрицы R (NxH)
 void init_R(int* R, const unsigned int* lens, unsigned int N, unsigned int H) {
     for (unsigned int i = 0; i < N; i++) {
         for (unsigned int j = 0; j < H; j++) {
@@ -88,6 +93,7 @@ int init_pairs(std::vector<Pair>& pairs, unsigned int* offsets, unsigned int* si
     return max_size;
 }
 
+// Поиск подстрок на хосте
 void mass_search_cpu(
     int* R,
     const char* text, 
@@ -110,6 +116,7 @@ void mass_search_cpu(
     }
 }
 
+// Ядро поиска подстрок на девайсе
 __global__ void mass_search_kernel(
     int* R,
     const char* text, 
@@ -138,6 +145,7 @@ __global__ void mass_search_kernel(
     }
 }
 
+// Поиск подстрок на девайсе
 void mass_search_gpu(
     int* R,
     const char* text, 
@@ -179,6 +187,7 @@ void mass_search_gpu(
     cudaFree(d_R);
 }
 
+// Сравнение результатов с хоста и девайса
 bool compare_indexes(int* R1, int* R2, unsigned int N, unsigned int H) {
     for (unsigned int i = 0; i < N; i++) {
         for (unsigned int j = 0; j < H; j++) {
@@ -190,6 +199,7 @@ bool compare_indexes(int* R1, int* R2, unsigned int N, unsigned int H) {
     return true;
 }
 
+// Структура хранения входных параметров программы
 struct Params {
     unsigned int min_H;
     unsigned int max_H;
@@ -200,30 +210,38 @@ struct Params {
     unsigned int repetitions;
 };
 
+// Парсинг входных параметров программы
 Params get_params(unsigned int argc, char** argv) {
     unsigned int min_H = 10000, max_H = 60000, num_H = 6, N = 10000, min_len = 5, max_len = 1000, repetitions = 10;
 
     for (unsigned int i = 1; i < argc; i++) {
         std::string arg = argv[i];
 
+        // Минимальный размер строки
         if (arg.find("--min_H=") == 0) {
             min_H = std::stoi(arg.substr(8));
         }
+        // Максимальный размер строки
         else if (arg.find("--max_H=") == 0) {
             max_H = std::stoi(arg.substr(8));
         }
+        // Число строк
         else if (arg.find("--num_H=") == 0) {
             num_H = std::stoi(arg.substr(8));
         }
+        // Число подстрок
         else if (arg.find("--N=") == 0) {
             N = std::stoi(arg.substr(4));
         }
+        // Минимальный размер подстроки
         else if (arg.find("--min_len=") == 0) {
             min_len = std::stoi(arg.substr(10));
         }
+        // Максимальный размер подстроки
         else if (arg.find("--max_len=") == 0) {
             max_len = std::stoi(arg.substr(10));
         }
+        // Число повторений
         else if (arg.find("--rep=") == 0) {
             repetitions = std::stoi(arg.substr(6));
         }
